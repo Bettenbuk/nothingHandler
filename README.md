@@ -1,4 +1,4 @@
-# nothingHandler
+# Nothing Handler
 
 # Goal
 
@@ -50,10 +50,24 @@ NothingHandler.ifNotNull(object).thenThrow(new AnyException());
 if(object!=null){
         return object;
         }else{
-        retrun otherObject;
+        return otherObject;
         }
 ```
 
 ```java
-retrun NothingHandler.ifNotNull(object).else(otehrObject);
+return NothingHandler.ifNotNull(object).else(otherObject);
+```
+
+### Read other value based on the checked value if Not Null
+
+```java
+if(object!=null){
+        return function(object);
+        }else{
+        return otherValue;
+        }
+```
+
+```java
+return NothingHandler.ifNotNull(object).then(x->function(x)).else(otherValue);
 ```
