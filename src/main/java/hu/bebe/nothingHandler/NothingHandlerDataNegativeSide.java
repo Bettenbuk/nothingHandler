@@ -2,6 +2,7 @@ package hu.bebe.nothingHandler;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 final class NothingHandlerDataNegativeSide<T> extends NothingHandlerData<T> {
@@ -28,5 +29,10 @@ final class NothingHandlerDataNegativeSide<T> extends NothingHandlerData<T> {
     public T orElse(@NotNull T otherSubject) {
         if (isOk) return subject;
         return otherSubject;
+    }
+
+    public <R> NothingHandlerDataNegativeSide<R> then(Function<T, R> function) {
+        if (isOk) return new NothingHandlerDataNegativeSide<>(function.apply(subject), true);
+        return new NothingHandlerDataNegativeSide<>(null, false);
     }
 }

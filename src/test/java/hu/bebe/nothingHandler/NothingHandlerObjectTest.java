@@ -8,43 +8,71 @@ import static hu.bebe.nothingHandler.NothingHandler.ifNull;
 
 public class NothingHandlerObjectTest {
 
-    private static final Object NULL_RESULT = null;
-    private static final Object RESULT = "RESULT";
-    private static final Object OTHER_RESULT = "OTHER_RESULT";
+    private static final Object NULL_INPUT = null;
+    private static final Object INPUT = "INPUT";
+    private static final Object RESULT_INPUT = INPUT;
+    private static final Object RESULT_ELSE = "OTHER_RESULT";
+    private static final Integer OTHER_RESULT = 1;
+    private static final Integer OTHER_RESULT_ELSE = 2;
 
     @Test
     public void ifNotNullTest() {
-        ifNull(RESULT).thenThrow();
-        ifNull(RESULT).thenThrow(new RuntimeException());
-        Assert.assertEquals(OTHER_RESULT, ifNotNull(NULL_RESULT).orElse(OTHER_RESULT));
-        Assert.assertEquals(RESULT, ifNotNull(RESULT).orElse(OTHER_RESULT));
-        Assert.assertEquals(RESULT, ifNotNull(RESULT).orElseThrow());
-        Assert.assertEquals(RESULT, ifNotNull(RESULT).orElseThrow(new RuntimeException()));
-        Assert.assertEquals(RESULT, ifNotNull(RESULT).orElseThrow(RuntimeException::new));
+        ifNull(INPUT).thenThrow();
+        ifNull(INPUT).thenThrow(new RuntimeException());
+        Assert.assertEquals(RESULT_ELSE, ifNotNull(NULL_INPUT).orElse(RESULT_ELSE));
+        Assert.assertEquals(RESULT_INPUT, ifNotNull(INPUT).orElse(RESULT_ELSE));
+        Assert.assertEquals(RESULT_INPUT, ifNotNull(INPUT).orElseThrow());
+        Assert.assertEquals(RESULT_INPUT, ifNotNull(INPUT).orElseThrow(new RuntimeException()));
+        Assert.assertEquals(RESULT_INPUT, ifNotNull(INPUT).orElseThrow(RuntimeException::new));
+    }
+
+    @Test
+    public void ifNotNullThenTest() {
+        Assert.assertEquals(OTHER_RESULT, ifNotNull(INPUT).then(this::getValue).orElse(OTHER_RESULT_ELSE));
+        Assert.assertEquals(OTHER_RESULT_ELSE, ifNotNull(NULL_INPUT).then(this::getValue).orElse(OTHER_RESULT_ELSE));
     }
 
     @Test(expected = NullPointerException.class)
     public void ifNullThrowException1Test() {
-        ifNull(NULL_RESULT).thenThrow();
+        ifNull(NULL_INPUT).thenThrow();
     }
 
     @Test(expected = RuntimeException.class)
     public void ifNullThrowException2Test() {
-        ifNull(NULL_RESULT).thenThrow(new RuntimeException());
+        ifNull(NULL_INPUT).thenThrow(new RuntimeException());
     }
 
     @Test(expected = NullPointerException.class)
     public void ifNotNullThrowException1Test() {
-        ifNotNull(NULL_RESULT).orElseThrow();
+        ifNotNull(NULL_INPUT).orElseThrow();
     }
 
     @Test(expected = RuntimeException.class)
     public void ifNotNullThrowException2Test() {
-        ifNotNull(NULL_RESULT).orElseThrow(new RuntimeException());
+        ifNotNull(NULL_INPUT).orElseThrow(new RuntimeException());
     }
 
     @Test(expected = RuntimeException.class)
     public void ifNotNullThrowException3Test() {
-        ifNotNull(NULL_RESULT).orElseThrow(RuntimeException::new);
+        ifNotNull(NULL_INPUT).orElseThrow(RuntimeException::new);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void ifNotNullThenThrowException1Test() {
+        ifNotNull(NULL_INPUT).then(this::getValue).orElseThrow();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void ifNotNullThenThrowException2Test() {
+        ifNotNull(NULL_INPUT).then(this::getValue).orElseThrow(new RuntimeException());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void ifNotNullThenThrowException3Test() {
+        ifNotNull(NULL_INPUT).then(this::getValue).orElseThrow(RuntimeException::new);
+    }
+
+    private Integer getValue(Object o) {
+        return OTHER_RESULT;
     }
 }
